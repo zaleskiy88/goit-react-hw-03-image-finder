@@ -21,9 +21,9 @@ export class ImageGalleryItem extends Component {
           onClick={this.modalToggler}
         />
 
-        {ismodalOpen ? (
+        {ismodalOpen && (
           <Modal fullImage={fullImage} onClose={this.modalToggler} />
-        ) : null}
+        )}
       </GalleryItem>
     );
   }

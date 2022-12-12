@@ -19,8 +19,15 @@ export class ImageGallery extends Component {
         if (res.data.hits.length === 0) {
           toast('There is no images on your query');
         }
+
         return res.data.hits;
       })
+      .then(hits =>
+        hits.map(({ id, webformatURL, largeImageURL }) => {
+          return { id, webformatURL, largeImageURL };
+        })
+      )
+
       .catch(e => toast('Something went wrong. Please try again later (: '));
 
     return imagesData;
@@ -32,12 +39,14 @@ export class ImageGallery extends Component {
 
   componentDidUpdate = async (prevProps, prevState) => {
     if (prevProps.searchQuery !== this.props.searchQuery) {
-      this.setState({ loading: true, imagesData: [] });
-
-      this.setState({ imagesData: await this.getImagesData(), loading: false });
+      await this.setState({ loading: true, imagesData: [], page: 1 });
+      this.setState({
+        imagesData: await this.getImagesData(),
+        loading: false,
+      });
     }
 
-    if (prevState.page !== this.state.page) {
+    if (prevState.page < this.state.page) {
       this.setState({ loading: true });
 
       this.setState({
